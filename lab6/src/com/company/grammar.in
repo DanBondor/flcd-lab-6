@@ -1,0 +1,8 @@
+S A B C D
+a b c d e f
+S
+S,a A
+A,A a,b A,a,b,eps
+B,b,A b,A C
+C,A c,D
+D,d,e,f
