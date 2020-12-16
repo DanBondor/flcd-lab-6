@@ -1,8 +1,8 @@
-S A B C D
-a b c d e f
-S
-S,a A
-A,A a,b A,a,b,eps
-B,b,A b,A C
-C,A c,D
-D,d,e,f
+E E1 T T1 F
++ * id ( )
+E
+E,T E1
+E1,+ T E1,eps
+T,F T1
+T1,* F T1,eps
+F,id,( E )

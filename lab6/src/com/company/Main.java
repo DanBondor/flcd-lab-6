@@ -41,6 +41,9 @@ public class Main {
                     String nonterminal = in.nextLine();
                     System.out.println(myGrammar.getFollow(nonterminal));
                 }
+                if (option.equals("8")){
+                    System.out.println(myGrammar.getParsingTable());
+                }
             }
         } catch (Exception e) {
             System.out.println(e);

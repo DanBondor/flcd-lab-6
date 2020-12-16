@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
@@ -10,13 +11,21 @@ class MyGrammar {
     private List<String> nonterminals;
     private HashMap<String, List<List<String>>> productions;
     private String first;
-    private List<List<String>> parsingTable;
+    //private List<List<String>> parsingTable;
+    private Map<String, Map<String, List<String>>> parseTable;
+    private Stack<String> alpha;
+    private Stack<String> beta;
+    private Stack<String> pi;
 
     MyGrammar(String filename) throws Exception {
         this.terminals = new ArrayList<>();
         this.nonterminals = new ArrayList<>();
         this.productions = new HashMap<>();
-        this.parsingTable = new ArrayList<>();
+        //this.parsingTable = new ArrayList<>();
+        this.parseTable = new HashMap<>();
+        this.alpha = new Stack<>();
+        this.beta = new Stack<>();
+        this.pi = new Stack<>();
         this.readGrammar(filename);
     }
 
@@ -160,27 +169,39 @@ class MyGrammar {
         return follow;
     }
 
-    public List<List<String>> getParsingTable() throws Exception {
-        for (int nonterm = 0; nonterm < this.nonterminals.size(); nonterm++) {
-            List<String> row = new ArrayList<>();
-            if (shouldGetFollow(this.nonterminals.get(nonterm))) {
-                Set<String> symbols = this.getFollow(this.nonterminals.get(nonterm));
-                for (int term = 0; term < this.terminals.size(); term++) {
-                    if(symbols.contains(this.terminals.get(term))){
-                        row.add("some");
+    public Map<String, Map<String, List<String>>> getParsingTable() throws Exception {
+
+        for (String nonterminal :productions.keySet())
+        {
+            Map<String, List<String>> aux = new HashMap<>();
+
+            for (List<String> production : productions.get(nonterminal))
+            {
+                if (!production.get(0).equals("eps"))
+                {
+                    for (String first : getFirstB(production.get(0)))
+                    {
+                        aux.put(first, production);
                     }
-                    else{
-                        row.add("nada");
+                }
+                else
+                {
+                    for (String follow: getFollow(nonterminal))
+                    {
+                        aux.put(follow, production);
                     }
                 }
             }
-            else{
-
-            }
-            this.parsingTable.add(row);
+            parseTable.put(nonterminal, aux);
         }
-        return this.parsingTable;
+
+        return parseTable;
     }
+
+    /*public boolean parse(List<String> w)
+    {
+
+    }*/
 
     public boolean shouldGetFollow(String nonterminal) throws Exception {
         List<String> epsList = new ArrayList<>();
